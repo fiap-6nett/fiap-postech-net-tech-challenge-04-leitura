@@ -8,22 +8,22 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Copia o arquivo .sln
-COPY Contato.Atualizar.sln . 
+COPY Contato.Leitura.sln . 
 
 # Copia os projetos necessários
-COPY Contato.Atualizar.Web/Contato.Atualizar.Web.csproj Contato.Atualizar.Web/
-COPY Contato.Atualizar.Application/Contato.Atualizar.Application.csproj Contato.Atualizar.Application/
-COPY Contato.Atualizar.Domain/Contato.Atualizar.Domain.csproj Contato.Atualizar.Domain/
-COPY Contato.Atualizar.Infra/Contato.Atualizar.Infra.csproj Contato.Atualizar.Infra/
+COPY Contato.Leitura.Application/Contato.Leitura.Application.csproj Contato.Leitura.Application/
+COPY Contato.Leitura.Domain/Contato.Leitura.Domain.csproj Contato.Leitura.Domain/
+COPY Contato.Leitura.Infra/Contato.Leitura.Infra.csproj Contato.Leitura.Infra/
+COPY Contato.Leitura.Web/Contato.Leitura.Web.csproj Contato.Leitura.Web/
 
 # Restaura os pacotes
-RUN dotnet restore Contato.Atualizar.sln
+RUN dotnet restore Contato.Leitura.sln
 
 # Copia o restante dos arquivos
 COPY . .
 
 # Compila o projeto
-WORKDIR /src/Contato.Atualizar.Web
+WORKDIR /src/Contato.Leitura.Web
 RUN dotnet build -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
@@ -33,4 +33,4 @@ RUN dotnet publish -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Contato.Atualizar.Web.dll"]
+ENTRYPOINT ["dotnet", "Contato.Leitura.Web.dll"]
