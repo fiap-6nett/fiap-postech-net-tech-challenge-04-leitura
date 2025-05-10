@@ -1,0 +1,6 @@
+@Contato.Leitura.Web_HostAddress = http://localhost:5011
+
+GET {{Contato.Leitura.Web_HostAddress}}/contato/
+Accept: application/json
+
+###
