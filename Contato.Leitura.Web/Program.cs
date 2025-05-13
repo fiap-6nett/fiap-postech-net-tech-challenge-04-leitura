@@ -34,11 +34,7 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(xmlPath);
 });
 
-// Configura a porta no Docker
-//builder.WebHost.ConfigureKestrel(options =>
-//{
-//    options.ListenAnyIP(8080);
-//});
+builder.WebHost.UseUrls("http://*:7100");
 
 var app = builder.Build();
 
@@ -46,7 +42,13 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI();    
+}
+
+var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+
+if (!isDocker)
+{
     app.UseHttpsRedirection();
 }
 
