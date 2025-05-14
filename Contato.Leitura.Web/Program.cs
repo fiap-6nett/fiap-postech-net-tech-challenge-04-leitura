@@ -9,9 +9,19 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configuração do CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()  // Permite qualquer origem
+              .AllowAnyMethod()  // Permite qualquer método (GET, POST, etc.)
+              .AllowAnyHeader(); // Permite qualquer cabeçalho
+    });
+});
+
 // Configuração do MongoDB
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDb"));
-
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
 builder.Services.AddSingleton<IMongoClient>(sp =>
@@ -38,17 +48,13 @@ builder.WebHost.UseUrls("http://*:7100");
 
 var app = builder.Build();
 
-// Pipeline da aplicação
+// Ativa o CORS com a política "AllowAll"
+app.UseCors("AllowAll");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();    
-}
-
-var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
-
-if (!isDocker)
-{
+    app.UseSwaggerUI();
     app.UseHttpsRedirection();
 }
 

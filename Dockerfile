@@ -35,4 +35,30 @@ COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Contato.Leitura.Web.dll"]
 
 # rodar o comando
-# docker run -d -p 7100:7100 --name api-leitura-container -e ASPNETCORE_ENVIRONMENT=Development api-leitura
+# docker build -t api-leitura:1.0 .
+
+# Imagens
+# docker images
+# docker rmi nome-da-imagem:tag 
+
+# Container
+# docker ps
+# docker stop (id)
+# docker rm (id)
+
+# Rodar o container da aplicação
+# docker run -d -p 7100:7100 --name api-leitura-container -e ASPNETCORE_ENVIRONMENT=Development --network api-network api-leitura:1.0
+
+# Rodar o container do banco de dados
+# docker run -d -p 27017:27017 --name mongo-db -e ASPNETCORE_ENVIRONMENT=Development --network api-network rafaelssouza108/mongo:7.0
+
+# Inserir um registro no MongoDB
+# docker exec -it mongo-db mongosh
+# db.contatos.insertOne({
+#   _id: "f35a1e8d-92cd-4b5a-9d61-91c7412f95bd",
+#   Nome: "João da Silva",
+#   Telefone: "99999-0000",
+#   Email: "joao@email.com",
+#   Ddd: "11"
+# });
+

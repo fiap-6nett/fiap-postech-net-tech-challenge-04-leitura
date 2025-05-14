@@ -12,7 +12,7 @@ public class ContatoRepository : IContatoRepository
     public ContatoRepository(IMongoClient mongoClient, IOptions<MongoDbSettings> mongoDbSettings)
     {
         var database = mongoClient.GetDatabase(mongoDbSettings.Value.Database);
-        _contatos = database.GetCollection<ContatoEntity>("Contatos"); 
+        _contatos = database.GetCollection<ContatoEntity>("contatos"); 
     }
     
     public virtual async Task<List<ContatoEntity>> ObterTodos()
