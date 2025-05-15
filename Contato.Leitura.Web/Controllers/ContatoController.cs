@@ -31,14 +31,57 @@ public class ContatoController(
         try
         {
             _logger.LogInformation($"Acessou {nameof(ObterTodos)}.");
-
             var response = _mapper.Map<IEnumerable<ContatoDto>>(await _contatoRepository.ObterTodos());
-
             return Ok(response);
         }
         catch (Exception ex)
         {
             _logger.LogError($"Falha na API Leitura de Contato. Erro: {ex}");
+            return StatusCode(500, $"Internal server error - {ex}");
+        }
+    }
+
+    /// <summary>
+    /// Obtém o contato por id cadastrado no banco de dados.
+    /// </summary>
+    /// <returns>Contato com status 200 ou erro interno com status 500.</returns>
+    [HttpGet("[action]")]
+    [ProducesResponseType(typeof(List<ContatoDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> ObterPorId(Guid id)
+    {
+        try
+        {
+            _logger.LogInformation($"Acessou {nameof(ObterPorId)}.");
+            var response = _mapper.Map<ContatoDto>(await _contatoRepository.ObterPorId(id));
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Falha na API Leitura de Contato por ID. Erro: {ex}");
+            return StatusCode(500, $"Internal server error - {ex}");
+        }
+    }
+
+
+    /// <summary>
+    /// Obtém todos os contatos por DDD cadastrados no banco de dados.
+    /// </summary>
+    /// <returns>Lista de contatos com status 200 ou erro interno com status 500.</returns>
+    [HttpGet("[action]")]
+    [ProducesResponseType(typeof(List<ContatoDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> ObterPorDdd(string ddd)
+    {
+        try
+        {
+            _logger.LogInformation($"Acessou {nameof(ObterPorDdd)}.");
+            var response = _mapper.Map<IEnumerable<ContatoDto>>(await _contatoRepository.ObterPorDdd(ddd));
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Falha na API Leitura de Contato por DDD. Erro: {ex}");
             return StatusCode(500, $"Internal server error - {ex}");
         }
     }
