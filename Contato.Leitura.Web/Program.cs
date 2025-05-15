@@ -3,24 +3,25 @@ using Contato.Leitura.Infra.Repositories;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Bson.Serialization;
-using MongoDB.Bson;
 using MongoDB.Driver;
+using Prometheus;
 using System.Reflection;
+using MongoDB.Bson;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuração do CORS
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()  // Permite qualquer origem
-              .AllowAnyMethod()  // Permite qualquer método (GET, POST, etc.)
-              .AllowAnyHeader(); // Permite qualquer cabeçalho
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 
-// Configuração do MongoDB
+// MongoDB
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDb"));
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
@@ -30,11 +31,11 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
     return new MongoClient(mongoDbSettings.ConnectionString);
 });
 
-// Registro de repositório
+// Repositórios e AutoMapper
 builder.Services.AddScoped<IContatoRepository, ContatoRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-// Serviços padrão da Web API
+// Web API padrão
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -44,22 +45,29 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(xmlPath);
 });
 
+// Define a porta HTTP
 builder.WebHost.UseUrls("http://*:7100");
 
 var app = builder.Build();
 
-// Ativa o CORS com a política "AllowAll"
+// Middleware
 app.UseCors("AllowAll");
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseHttpsRedirection();
+    //app.UseHttpsRedirection();
 }
 
+// Middleware Prometheus para requisições HTTP
+app.UseHttpMetrics();
+
+// Autorização
 app.UseAuthorization();
 
+// Endpoints da API e métricas
 app.MapControllers();
+app.MapMetrics(); // Exposição do /metrics
 
 app.Run();
