@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  leitura-api:
+    image: api-leitura:2.0
+    container_name: leitura-api
+    ports:
+      - "7100:7100"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - api-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - api-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - api-network
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - api-network
+    volumes:
+      - mongodb-data:/data/db
+
+networks:
+  api-network:
+
+volumes:
+  grafana-storage:
+  mongodb-data:

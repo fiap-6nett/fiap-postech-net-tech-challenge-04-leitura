@@ -54,6 +54,7 @@ ENTRYPOINT ["dotnet", "Contato.Leitura.Web.dll"]
 
 # Inserir um registro no MongoDB
 # docker exec -it mongo-db mongosh
+
 # db.contatos.insertOne({
 #   _id: "f35a1e8d-92cd-4b5a-9d61-91c7412f95bd",
 #   Nome: "João da Silva",
@@ -62,3 +63,25 @@ ENTRYPOINT ["dotnet", "Contato.Leitura.Web.dll"]
 #   Ddd: "11"
 # });
 
+# show dbs
+# show collections
+# db.contatos.find().pretty()
+# db.contatos.countDocuments()
+
+# Infos do Mongo
+# mongodb://127.0.0.1:27017
+
+# Docker Compose
+# docker-compose up
+
+# Exemplo se atualizar a api 
+# docker build -t api-leitura:1.0 .
+# docker-compose up -d --build leitura-api
+
+# Refaz mais rápido, porém apagando o volume
+# docker compose down
+# docker compose up -d
+
+# Refaz sem perder o volume
+# docker compose stop
+# docker compose restart
