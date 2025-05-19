@@ -53,7 +53,7 @@ ENTRYPOINT ["dotnet", "Contato.Leitura.Web.dll"]
 # docker run -d -p 27017:27017 --name mongo-db -e ASPNETCORE_ENVIRONMENT=Development --network api-network rafaelssouza108/mongo:7.0
 
 # Inserir um registro no MongoDB
-# docker exec -it mongo-db mongosh
+# docker exec -it mongodb mongosh
 
 # db.contatos.insertOne({
 #   _id: "f35a1e8d-92cd-4b5a-9d61-91c7412f95bd",
