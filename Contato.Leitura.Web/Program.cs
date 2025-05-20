@@ -46,7 +46,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Define a porta HTTP
-builder.WebHost.UseUrls("http://*:7100");
+builder.WebHost.UseUrls("http://*:8080");
 
 var app = builder.Build();
 
